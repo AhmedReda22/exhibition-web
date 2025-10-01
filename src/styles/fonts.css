@@ -1,0 +1,68 @@
+/* ================== Myriad Pro ================== */
+@font-face {
+  font-family: "MyriadPro";
+  src: url("../fonts/MyriadPro-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "MyriadPro";
+  /* لاحظ: هنا الاسم فيه مسافة Myriad Pro Bold.woff2 */
+  src: url("../fonts/MyriadPro-Bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ================== Klampenborg ================== */
+@font-face {
+  font-family: "Klampenborg";
+  src: url("../fonts/AFKlampenborg.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Klampenborg";
+  src: url("../fonts/AFKlampenborg-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ================== CSS variables ================== */
+:root {
+  --font-ru: "MyriadPro", "Segoe UI", Roboto, Arial, sans-serif;
+  --font-uz-en: "Klampenborg", "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+/* ==== قواعد عامة حسب اللغة ==== */
+html[data-lang="ru"],
+body[data-lang="ru"] {
+  font-family: var(--font-ru);
+}
+
+html[data-lang="en"],
+html[data-lang="uz"],
+body[data-lang="en"],
+body[data-lang="uz"] {
+  font-family: var(--font-uz-en);
+}
+
+/* ==== فئات مساعدة لاستخدام الخط يدويًا ==== */
+.font-ru {
+  font-family: var(--font-ru) !important;
+}
+
+.font-uz-en {
+  font-family: var(--font-uz-en) !important;
+}
+
+/* ==== فقاعات الكلام تتبع نفس الخط ==== */
+.speech-bubble,
+.speech-bubble * {
+  font-family: inherit;
+}
