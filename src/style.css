@@ -1357,6 +1357,21 @@ html[data-lang="en"] {
   font-family: "Klampenborg", sans-serif;
 }
 
+.robot-video {
+  width: 1200px;   /* نفس حجم الروبوت */
+  height: auto;
+  margin-left: -370px;
+  margin-top: -130px;
+  z-index: 2;
+  position: relative;
+  animation: float 3s ease-in-out infinite; /* نفس الأنيميشن اللي كان على الصورة */
+}
+
+
+.speech-bubble {
+  margin-left:-390px;
+}
+
 
 
 
@@ -1452,9 +1467,9 @@ html[data-lang="en"] {
 /* فقاعة الكلام - تحسينات للتعامل مع النص الطويل */
 .origin-speech-bubble {
   border-radius: 25px;
-  padding: 20px 25px;
+  padding: 20px; /* مسافة فوق وتحت بس */
   width: 600px;
-  height: 100px;
+  height: auto; 
   background-image: url('./assets/box.png');
   background-size: cover;
   background-position: center;
@@ -1467,50 +1482,32 @@ html[data-lang="en"] {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0;
+  margin: 0 auto;
   z-index: 10;
-  
-  /* إضافة هذه الخصائص الجديدة */
   overflow: hidden;
-  word-wrap: break-word;
-  text-overflow: ellipsis;
 }
 
+/* النص */
 .origin-speech-bubble p {
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
-  width: 100%;
+  width: 80%;              /* ✅ خلي النص مايغطيش الخلفية كلها */
+  max-width: 700px;        /* ✅ يسيب فراغ ثابت يمين وشمال */
   text-align: center;
-  display: block;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
   color: var(--text-dark);
   font-weight: 900;
-  font-size: 28px;
+  font-size: clamp(16px, 2vw, 28px);
   line-height: 1.3;
   text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.9);
-  
-  /* إضافة هذه الخصائص الجديدة */
-  max-height: 100%;
-  display: -webkit-box;
-  -webkit-line-clamp: 3; /* تحديد عدد الأسطر المسموح به */
-  -webkit-box-orient: vertical;
   word-break: break-word;
 }
 
-/* حجم الخط المتجاوب بناءً على طول النص */
-.origin-speech-bubble.medium-text p {
-  font-size: 24px;
-}
 
-.origin-speech-bubble.long-text p {
-  font-size: 20px;
-}
-
-.origin-speech-bubble.very-long-text p {
-  font-size: 18px;
-  -webkit-line-clamp: 4; /* زيادة عدد الأسطر للنص الطويل جداً */
-}
 
 /* محتوى الخريطة المركز */
 .origin-content {
@@ -1912,64 +1909,63 @@ html[data-lang="en"] {
   transform: scale(1.05);
 }
 
-/* فقاعة الكلام - نفس OriginPage */
 .history-speech-bubble {
   border-radius: 25px;
   padding: 20px 25px;
   width: 600px;
-  height: 100px;
+  height: 100px;           /* ✅ ثابت */
   background-image: url('./assets/box.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  color: var(--text-dark);
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.4;
-  text-shadow: 2px 2px 4px rgba(255, 255, 255, 0.8);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0;
+  margin: 0 auto;
   z-index: 10;
-  overflow: hidden;
-  word-wrap: break-word;
-  text-overflow: ellipsis;
+  overflow: hidden;        /* ✅ الكلام ما يطلعش برا */
 }
 
 .history-speech-bubble p {
-  margin: 0;
+  margin: 0 auto;
   padding: 0;
-  width: 100%;
+  width: 75%;             /* ✅ يسيب مساحة زخرفة يمين وشمال */
   text-align: center;
-  display: block;
-  overflow: hidden;
-  text-overflow: ellipsis;
   color: var(--text-dark);
   font-weight: 900;
-  font-size: 28px;
-  line-height: 1.3;
+  line-height: 1.2;
   text-shadow: 2px 2px 6px rgba(255, 255, 255, 0.9);
-  max-height: 100%;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
   word-break: break-word;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* حجم الخط المتجاوب بناءً على طول النص */
+/* ✅ الخطوط أصغر من النسخة السابقة */
+.history-speech-bubble.short-text p {
+  font-size: 18px;   /* كان 22px */
+  -webkit-line-clamp: 2;
+}
+
 .history-speech-bubble.medium-text p {
-  font-size: 24px;
+  font-size: 16px;   /* كان 18px */
+  -webkit-line-clamp: 3;
 }
 
 .history-speech-bubble.long-text p {
-  font-size: 20px;
+  font-size: 14px;   /* كان 16px */
+  -webkit-line-clamp: 3;
 }
 
 .history-speech-bubble.very-long-text p {
-  font-size: 18px;
+  font-size: 12px;   /* كان 14px */
   -webkit-line-clamp: 4;
 }
+
+
+
+
 
 /* محتوى الصفحة المركز */
 .history-content {

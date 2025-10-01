@@ -1,7 +1,7 @@
 // HoldingPage.jsx
 import React, { useState, useEffect, useRef } from "react";
 import "../style.css";
-import robotImage from "../assets/robot.png";
+import robotVideo from "../assets/robot.webm";
 import bookImage from "../assets/book.png";
 import startUzImage from "../assets/start-auz.png";
 import startRuImage from "../assets/start-ru.png";
@@ -204,12 +204,15 @@ export default function HoldingPage({ onSelectLanguage }) {
 
       <div className="main-content">
         <div className="robot-container top-left">
-          <img
-            ref={robotRef}
-            src={robotImage}
-            alt="Robot Hakim"
-            className="robot-image"
-          />
+          <video 
+  src={robotVideo} 
+  autoPlay 
+  loop 
+  muted 
+  playsInline 
+  className="robot-video"
+/>
+
           <div ref={speechBubbleRef} className="speech-bubble">
             <p key={visibleLine} className={`fade-in-line ${cycleLang === "ru" ? "font-ru" : "font-uz-en"}`}>
               {displayedText}

@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef } from "react";
 import "../style.css";
 import robotImage from "../assets/robot.png";
 import videoSrc from "../assets/robot.mp4";
-import bgImage from "../assets/bg.jpeg"; // نفس خلفية OriginPage
-import boxImage from "../assets/box.png"; // نفس صندوق OriginPage
+import bgImage from "../assets/bg.jpeg";
+import boxImage from "../assets/box.png";
 
 export default function RoomsPage({ language, onFinish }) {
   const [bubbleText, setBubbleText] = useState("");
@@ -15,13 +15,25 @@ export default function RoomsPage({ language, onFinish }) {
   const robotRef = useRef(null);
   const effectsContainerRef = useRef(null);
 
-  // دالة لتحديد حجم النص بناءً على طوله - نفس OriginPage
+  // دالة محسنة لتحديد حجم النص بناءً على طوله ودقة الشاشة
   const getTextSizeClass = (text) => {
     if (!text) return '';
     const length = text.length;
-    if (length > 100) return 'very-long-text';
-    if (length > 60) return 'long-text';
-    if (length > 30) return 'medium-text';
+    const width = window.innerWidth;
+    
+    if (width >= 3840) { // 4K وأكبر
+      if (length > 150) return 'very-long-text';
+      if (length > 80) return 'long-text';
+      if (length > 40) return 'medium-text';
+    } else if (width >= 2560) { // 2K
+      if (length > 120) return 'very-long-text';
+      if (length > 70) return 'long-text';
+      if (length > 35) return 'medium-text';
+    } else { // شاشات عادية
+      if (length > 100) return 'very-long-text';
+      if (length > 60) return 'long-text';
+      if (length > 30) return 'medium-text';
+    }
     return '';
   };
 
@@ -51,13 +63,6 @@ export default function RoomsPage({ language, onFinish }) {
           emoji: "💎",
           description: "Explore ancient artifacts and hidden treasures!",
           color: "linear-gradient(145deg, #FFD93D, #FF9C3D)"
-        },
-        {
-          id: 4,
-          name: "Time Travel Portal",
-          emoji: "⏰",
-          description: "Journey through different historical eras!",
-          color: "linear-gradient(145deg, #6A11CB, #2575FC)"
         }
       ]
     },
@@ -135,7 +140,7 @@ export default function RoomsPage({ language, onFinish }) {
 
   const t = texts[language] || texts.en;
 
-  // ✅ دالة تشغيل الصوت المحسنة - نفس OriginPage
+  // ✅ دالة تشغيل الصوت المحسنة
   const speakText = (text, lang, callback) => {
     if ("speechSynthesis" in window) {
       window.speechSynthesis.cancel();
@@ -174,18 +179,20 @@ export default function RoomsPage({ language, onFinish }) {
     }
   };
 
-  // 🌌 نجوم الخلفية المتحركة - نفس OriginPage
+  // 🌌 نجوم الخلفية المتحركة المحسنة
   useEffect(() => {
     const createStars = () => {
       const container = starsContainerRef.current;
       if (!container) return;
 
       container.innerHTML = "";
-      for (let i = 0; i < 40; i++) {
+      const starCount = window.innerWidth >= 2560 ? 80 : 40;
+      for (let i = 0; i < starCount; i++) {
         const star = document.createElement("div");
         star.className = "star";
 
-        const size = Math.random() * 3 + 2;
+        const size = window.innerWidth >= 2560 ? 
+          Math.random() * 4 + 2 : Math.random() * 3 + 2;
         const left = Math.random() * 100;
         const top = Math.random() * 100;
         const duration = Math.random() * 3 + 2;
@@ -203,11 +210,14 @@ export default function RoomsPage({ language, onFinish }) {
     };
 
     createStars();
-    window.addEventListener("resize", createStars);
-    return () => window.removeEventListener("resize", createStars);
+    const handleResize = () => {
+      createStars();
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // إنشاء تأثيرات النقر المحسنة - نفس OriginPage
+  // إنشاء تأثيرات النقر المحسنة
   const createClickEffects = (room, event) => {
     const container = effectsContainerRef.current;
     if (!container) return;
@@ -242,7 +252,7 @@ export default function RoomsPage({ language, onFinish }) {
       star.innerHTML = "⭐";
       
       const angle = (Math.PI * 2 * i) / 8;
-      const distance = 60;
+      const distance = window.innerWidth >= 2560 ? 80 : 60;
       const starX = Math.cos(angle) * distance;
       const starY = Math.sin(angle) * distance;
       
@@ -263,11 +273,10 @@ export default function RoomsPage({ language, onFinish }) {
     }, 1000);
   };
 
-  // عند تحميل الصفحة: قول جملة Hakim الأولى - نفس OriginPage
+  // عند تحميل الصفحة: قول جملة Hakim الأولى
   useEffect(() => {
     setBubbleText(t.hakimHello);
     speakText(t.hakimHello, language, () => {
-      // بعد انتهاء الصوت، إظهار الغرف
       setTimeout(() => {
         setShowRooms(true);
       }, 1000);
@@ -278,8 +287,6 @@ export default function RoomsPage({ language, onFinish }) {
   const handleRoomClick = (room, event) => {
     setActiveRoom(room);
     createClickEffects(room, event);
-    
-    // تأثير صوتي بسيط
     speakText(`${room.name}. ${room.description}`, language);
   };
 
@@ -297,7 +304,7 @@ export default function RoomsPage({ language, onFinish }) {
 
   return (
     <div className="page-container rooms-page">
-      {/* 🌌 خلفية النجوم - نفس OriginPage */}
+      {/* 🌌 خلفية النجوم */}
       <div
         className="background-image"
         style={{ backgroundImage: `url(${bgImage})` }}
@@ -317,7 +324,7 @@ export default function RoomsPage({ language, onFinish }) {
         zIndex: 100
       }}></div>
 
-      {/* 🎙️ مؤشر الصوت - نفس OriginPage */}
+      {/* 🎙️ مؤشر الصوت */}
       {isSpeaking && (
         <div className="speaking-indicator">
           <div className="pulse-animation"></div>
@@ -325,7 +332,7 @@ export default function RoomsPage({ language, onFinish }) {
         </div>
       )}
 
-      {/* 🤖 الروبوت + البالون - نفس OriginPage */}
+      {/* 🤖 الروبوت + البالون */}
       <div className="robot-container top-left rooms-robot-container">
         <img 
           ref={robotRef}
@@ -336,31 +343,29 @@ export default function RoomsPage({ language, onFinish }) {
         />
 
         <div className={`speech-bubble rooms-speech-bubble ${getTextSizeClass(bubbleText)}`}>
-  <p 
-    className={language === "ru" ? "font-ru" : "font-uz-en"} 
-    style={{ margin: 0, lineHeight: '1.4' }}
-  >
-    {bubbleText}
-    {isSpeaking && <span style={{ animation: 'blink 1s infinite' }}>...</span>}
-  </p>
-</div>
-
+          <p 
+            className={language === "ru" ? "font-ru" : "font-uz-en"} 
+            style={{ margin: 0, lineHeight: '1.4' }}
+          >
+            {bubbleText}
+            {isSpeaking && <span style={{ animation: 'blink 1s infinite' }}>...</span>}
+          </p>
+        </div>
       </div>
 
       {/* 🎥 محتوى الصفحة الرئيسي */}
       <div className="main-content rooms-content">
-        <div style={{ textAlign: "center", marginBottom: "40px" }}>
+        <div className="rooms-header">
           <h2 className={`rooms-page-title ${language === "ru" ? "font-ru" : "font-uz-en"}`}>
-  {language === 'en' ? 'Magical Adventure Rooms' : 
-   language === 'uz' ? 'Sehrli Sarguzasht Xonalari' : 
-   'Волшебные Комнаты Приключений'}
-</h2>
-<p className={`rooms-page-subtitle ${language === "ru" ? "font-ru" : "font-uz-en"}`}>
-  {language === 'en' ? '✨ Choose your path to amazing discoveries! ✨' : 
-   language === 'uz' ? '✨ Ajoyib kashfiyotlar yo\'lini tanlang! ✨' : 
-   '✨ Выберите свой путь к удивительным открытиям! ✨'}
-</p>
-
+            {language === 'en' ? 'Magical Adventure Rooms' : 
+             language === 'uz' ? 'Sehrli Sarguzasht Xonalari' : 
+             'Волшебные Комнаты Приключений'}
+          </h2>
+          <p className={`rooms-page-subtitle ${language === "ru" ? "font-ru" : "font-uz-en"}`}>
+            {language === 'en' ? '✨ Choose your path to amazing discoveries! ✨' : 
+             language === 'uz' ? '✨ Ajoyib kashfiyotlar yo\'lini tanlang! ✨' : 
+             '✨ Выберите свой путь к удивительным открытиям! ✨'}
+          </p>
         </div>
 
         {/* 🎥 الفيديو */}
@@ -370,6 +375,7 @@ export default function RoomsPage({ language, onFinish }) {
             src={videoSrc}
             autoPlay
             muted
+            loop
             className="rooms-video-player"
           />
           <div className="video-overlay">
@@ -385,9 +391,8 @@ export default function RoomsPage({ language, onFinish }) {
         {showRooms && (
           <div className="rooms-container">
             <h2 className={`rooms-title ${language === "ru" ? "font-ru" : "font-uz-en"}`}>
-  {t.roomsTitle}
-</h2>
-
+              {t.roomsTitle}
+            </h2>
             
             <div className="rooms-grid">
               {t.rooms.map((room) => (
@@ -412,35 +417,33 @@ export default function RoomsPage({ language, onFinish }) {
       {showRooms && (
         <div className="rooms-next-container">
           <button 
-  className={`rooms-start-button ${language === "ru" ? "font-ru" : "font-uz-en"}`} 
-  onClick={onFinish}
->
-  {t.button}
-</button>
-
+            className={`rooms-start-button ${language === "ru" ? "font-ru" : "font-uz-en"}`} 
+            onClick={onFinish}
+          >
+            {t.button}
+          </button>
         </div>
       )}
 
-      {/* 🏰 Popup معلومات الغرفة - مع خلفية box.png */}
+      {/* 🏰 Popup معلومات الغرفة */}
       {activeRoom && (
         <div className="rooms-room-popup">
           <div className={`rooms-room-popup-inner ${getTextSizeClass(activeRoom.description)}`}>
-  <h3 className={language === "ru" ? "font-ru" : "font-uz-en"}>
-    {activeRoom.name}
-  </h3>
-  <p className={language === "ru" ? "font-ru" : "font-uz-en"}>
-    {activeRoom.description}
-  </p>
-  <button 
-    className={language === "ru" ? "font-ru" : "font-uz-en"}
-    onClick={() => setActiveRoom(null)}
-  >
-    {language === 'en' ? 'Close' : 
-     language === 'uz' ? 'Yopish' : 
-     'Закрыть'}
-  </button>
-</div>
-
+            <h3 className={language === "ru" ? "font-ru" : "font-uz-en"}>
+              {activeRoom.name}
+            </h3>
+            <p className={language === "ru" ? "font-ru" : "font-uz-en"}>
+              {activeRoom.description}
+            </p>
+            <button 
+              className={language === "ru" ? "font-ru" : "font-uz-en"}
+              onClick={() => setActiveRoom(null)}
+            >
+              {language === 'en' ? 'Close' : 
+               language === 'uz' ? 'Yopish' : 
+               'Закрыть'}
+            </button>
+          </div>
         </div>
       )}
     </div>

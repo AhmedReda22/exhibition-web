@@ -17,15 +17,18 @@ export default function HistoryPage({ language = "en", onNext }) {
   const robotRef = useRef(null);
   const effectsContainerRef = useRef(null);
 
-  // دالة لتحديد حجم النص بناءً على طوله - نفس OriginPage
-  const getTextSizeClass = (text) => {
-    if (!text) return '';
-    const length = text.length;
-    if (length > 100) return 'very-long-text';
-    if (length > 60) return 'long-text';
-    if (length > 30) return 'medium-text';
-    return '';
-  };
+
+  // دالة لتحديد حجم النص بناءً على طوله
+const getTextSizeClass = (text) => {
+  if (!text) return '';
+
+  if (text.length > 220) return 'very-long-text'; // نص طويل جدًا
+  if (text.length > 150) return 'long-text';      // نص طويل
+  if (text.length > 80) return 'medium-text';     // نص متوسط
+  return 'short-text';                            // نص قصير
+};
+
+
 
   const texts = {
     en: {
